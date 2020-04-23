@@ -234,6 +234,17 @@ class Geocaching(object):
         return self.search_advanced(point, limit)
 
     def search_advanced(self, point=None, limit=float("inf")):
+        """
+        Returns a generator of caches from a search
+
+        Search for caches with parameters by loading search pages and parsing the data from these pages. Yield
+        :class:`.Cache`objects filled with data from search page. You can provide limit as convenient way to stop
+        generator after certain number of caches.
+
+        :param .geo.Point point: Search center point (optional)
+        :param int limit: Maximum number of caches to generate. Number is limited to 1000 by Groundspeak.
+
+        """
         start_index = 0
         parameters = {}
 
