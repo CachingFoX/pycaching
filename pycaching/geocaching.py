@@ -233,12 +233,15 @@ class Geocaching(object):
         logging.info("Searching at {}".format(point))
         return self.search_advanced(point, limit)
 
-    def search_advanced(self, point, limit=float("inf")):
+    def search_advanced(self, point=None, limit=float("inf")):
         start_index = 0
         parameters = {}
 
-        assert hasattr(point, "format") and callable(point.format)
-        parameters['origin'] = point.format_decimal()
+        if point is None:
+            parameters['ot'] = 4
+        else:
+            assert hasattr(point, "format") and callable(point.format)
+            parameters['origin'] = point.format_decimal()
 
         while True:
             # get one page
