@@ -235,9 +235,14 @@ class Geocaching(object):
 
     def search_advanced(self, point, limit=float("inf")):
         start_index = 0
+        parameters = {}
+
+        assert hasattr(point, "format") and callable(point.format)
+        parameters['origin'] = point.format_decimal()
+
         while True:
             # get one page
-            geocaches_table, whole_page = self._search_get_page(point, start_index)
+            geocaches_table, whole_page = self._search_get_page(parameters, start_index)
 
             if not geocaches_table:
                 # result is empty - no more caches
@@ -293,14 +298,13 @@ class Geocaching(object):
 
             start_index += 1
 
-    def _search_get_page(self, point, start_index):
+    def _search_get_page(self, parameters, start_index):
         """Return one page for standard search as class:`bs4.BeautifulSoup` object.
 
-        :param .geo.Point point: Search center point.
+        :param dict parameters: List of search parameters
         :param int start_index: Determines the page. If start_index is greater than zero, this
             method will use AJAX andpoint which is much faster.
         """
-        assert hasattr(point, "format") and callable(point.format)
         logging.debug("Loading page from start_index {}".format(start_index))
 
         if start_index == 0:
@@ -308,9 +312,7 @@ class Geocaching(object):
             logging.debug("Using normal search endpoint")
 
             # make request
-            res = self._request(self._urls["search"], params={
-                "origin": point.format_decimal(),
-            })
+            res = self._request(self._urls["search"], params=parameters)
             return res.find(id="geocaches"), res
 
         else:
@@ -318,12 +320,10 @@ class Geocaching(object):
             logging.debug("Using AJAX search endpoint")
 
             # make request
-            res = self._request(self._urls["search_more"], params={
-                "origin": point.format_decimal(),
-                "startIndex": start_index,
-                "ssvu": 2,
-                "selectAll": "false",
-            }, expect="json")
+            parameters['startIndex'] = start_index
+            parameters['ssvu'] = 2
+            parameters['selectAll'] = 'false'
+            res = self._request(self._urls["search_more"], params=parameters, expect="json")
 
             return bs4.BeautifulSoup(res["HtmlString"].strip(), "html.parser"), None
 
