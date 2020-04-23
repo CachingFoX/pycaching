@@ -14,7 +14,7 @@ from pycaching.log import Log, Type as LogType
 from pycaching.geo import Point
 from pycaching.trackable import Trackable
 from pycaching.errors import Error, NotLoggedInException, LoginFailedException, PMOnlyException
-
+from pycaching.search import SortColumn
 
 class Geocaching(object):
     """Provides some basic methods for communicating with geocaching.com website.
@@ -233,7 +233,7 @@ class Geocaching(object):
         logging.info("Searching at {}".format(point))
         return self.search_advanced(point=point, limit=limit)
 
-    def search_advanced(self, point=None, radius=None, imperial=False, limit=float("inf")):
+    def search_advanced(self, point=None, radius=None, imperial=False, sort_column=None, sort_ascend=None, limit=float("inf")):
         """
         Returns a generator of caches from a search
 
@@ -244,6 +244,8 @@ class Geocaching(object):
         :param .geo.Point point: Search center point (optional)
         :param int radius: Search radius in kilometers or miles (see also parameter imperial)
         :param bool imperial: If it True, radius in handle as miles instead of kilometers.
+        :param search.SortColumn sort_column:
+        :param sort_ascend: True (None) means ascend, False means descend
         :param int limit: Maximum number of caches to generate. Number is limited to 1000 by Groundspeak.
 
         Parameter :param:radius will be ignored in there no parameter :param:point.
@@ -263,6 +265,12 @@ class Geocaching(object):
                 if not radius >= 1:
                     raise ValueError
                 parameters['radius'] = '{}{}'.format(int(radius), 'mi' if imperial else 'km')
+
+        if sort_column is not None:
+            if type(sort_column) != SortColumn:
+                raise TypeError
+            parameters['sort'] = str(sort_column)
+            parameters['asc'] = 'True' if sort_ascend else 'False'
 
         while True:
             # get one page
