@@ -231,7 +231,9 @@ class Geocaching(object):
         :param int limit: Maximum number of caches to generate.
         """
         logging.info("Searching at {}".format(point))
+        return self.search_advanced(point, limit)
 
+    def search_advanced(self, point, limit=float("inf")):
         start_index = 0
         while True:
             # get one page
