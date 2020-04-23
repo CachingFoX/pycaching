@@ -231,9 +231,9 @@ class Geocaching(object):
         :param int limit: Maximum number of caches to generate.
         """
         logging.info("Searching at {}".format(point))
-        return self.search_advanced(point, limit)
+        return self.search_advanced(point=point, limit=limit)
 
-    def search_advanced(self, point=None, limit=float("inf")):
+    def search_advanced(self, point=None, radius=None, imperial=False, limit=float("inf")):
         """
         Returns a generator of caches from a search
 
@@ -242,7 +242,11 @@ class Geocaching(object):
         generator after certain number of caches.
 
         :param .geo.Point point: Search center point (optional)
+        :param int radius: Search radius in kilometers or miles (see also parameter imperial)
+        :param bool imperial: If it True, radius in handle as miles instead of kilometers.
         :param int limit: Maximum number of caches to generate. Number is limited to 1000 by Groundspeak.
+
+        Parameter :param:radius will be ignored in there no parameter :param:point.
 
         """
         start_index = 0
@@ -253,6 +257,12 @@ class Geocaching(object):
         else:
             assert hasattr(point, "format") and callable(point.format)
             parameters['origin'] = point.format_decimal()
+
+            if radius is not None:
+                radius = int(radius)
+                if not radius >= 1:
+                    raise ValueError
+                parameters['radius'] = '{}{}'.format(int(radius), 'mi' if imperial else 'km')
 
         while True:
             # get one page
@@ -269,8 +279,6 @@ class Geocaching(object):
                     label.find("span").text.strip(): Size.from_number(label.find("input").get("value"))
                     for label in cache_sizes_filter_wrapper.find_all("label")
                 }
-
-
 
             # parse caches in result
             for start_index, row in enumerate(geocaches_table.find_all("tr"), start_index):
