@@ -19,6 +19,18 @@ from pycaching.search import SortColumn
 
 # logging.root.setLevel(logging.DEBUG)
 
+
+def is_sorted(lst, key=lambda x: x, ascend=True):
+    for i, el in enumerate(lst[1:]):
+        if ascend:
+            if key(el) <= key(lst[i]):  # i is the index of the previous element
+                return False
+        else:
+            if key(el) >= key(lst[i]):  # i is the index of the previous element
+                return False
+    return True
+
+
 class TestMethods(NetworkedTest):
     def test_search(self):
         '''
@@ -60,3 +72,31 @@ class TestMethods(NetworkedTest):
                 for index, item in enumerate(results):
                     print("{} {} {}".format(index+1, item, item.name))
                 self.assertEqual(index + 1, 45)
+
+
+
+        with self.subTest("top10"):
+            with self.recorder.use_cassette('search_top10'):
+                results = self.gc.search_advanced(sort_column=SortColumn.Favorites, sort_ascend=False, limit=10)
+                data = {}
+                favorites = []
+                for index, item in enumerate(results):
+                    print("{} {} {} {}".format(index+1, item.wp, item.name, item.favorites))
+                    data[item.wp] = item.favorites
+                    favorites.append(item.favorites)
+                print(data)
+                self.assertTrue(is_sorted(favorites, ascend=False))
+                self.assertEqual(index + 1, 10)
+                self.assertDictEqual(data, {
+                    'GC13Y2Y': 11360,
+                    'GC11JM6': 8159,
+                    'GC18182': 6811,
+                    'GC2586K': 6795,
+                    'GC167KK': 6362,
+                    'GC38DP9': 5501,
+                    'GC2J9J5': 5309,
+                    'GC35KGZ': 5288,
+                    'GC40': 5120,
+                    'GCK25B': 4942
+                })
+        pass
