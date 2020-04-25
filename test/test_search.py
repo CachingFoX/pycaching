@@ -15,7 +15,7 @@ from pycaching import Cache, Geocaching, Point, Rectangle
 from pycaching.errors import NotLoggedInException, LoginFailedException, PMOnlyException
 from . import username as _username, password as _password, NetworkedTest
 import logging
-from pycaching.search import Sorting, Origin
+from pycaching.search import Sorting, Origin, Filter
 
 # logging.root.setLevel(logging.DEBUG)
 
@@ -125,3 +125,22 @@ class TestHelperObjects(unittest.TestCase):
         with self.subTest("imperial"):
             o = Origin((-51.7292, -59.2135), radius=5, unit=Origin.UnitSystem.imperial)
             self.assertDictEqual(o.parameters, {'origin': '-51.7292, -59.2135', 'radius': '5mi'})
+
+    def test_sorting(self):
+        with self.subTest("without parameters"):
+            s = Sorting()
+            self.assertDictEqual(s.parameters, {})
+
+        with self.subTest("order without column"):
+            s = Sorting(order=Sorting.Order.descending)
+            self.assertDictEqual(s.parameters, {})
+
+        with self.subTest("column"):
+            s = Sorting(Sorting.Columns.Favorites)
+            self.assertDictEqual(s.parameters, {'sort': 'FavoritePoint', 'asc': 'True'})
+
+        with self.subTest("column and order"):
+            s = Sorting(Sorting.Columns.Favorites, Sorting.Order.descending)
+            self.assertDictEqual(s.parameters, {'sort': 'FavoritePoint', 'asc': 'False'})
+            s = Sorting(Sorting.Columns.Favorites, Sorting.Order.ascending)
+            self.assertDictEqual(s.parameters, {'sort': 'FavoritePoint', 'asc': 'True'})
