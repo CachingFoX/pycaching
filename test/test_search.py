@@ -43,7 +43,6 @@ class TestMethods(NetworkedTest):
                 print(item, item.size)
 
 
-
     def test_search_advanced(self):
         with self.subTest("without_location"):
             with self.recorder.use_cassette('search_without_location'):
@@ -99,3 +98,30 @@ class TestMethods(NetworkedTest):
                     'GCK25B': 4942
                 })
         pass
+
+
+class TestHelperObjects(unittest.TestCase):
+    def test_origin(self):
+        with self.subTest("worldwide (no origin)"):
+            o = Origin()
+            self.assertDictEqual(o.parameters, {'ot': '4'})
+            o = Origin(radius=34)
+            self.assertDictEqual(o.parameters, {'ot': '4'})
+            o = Origin(unit=Origin.UnitSystem.imperial)
+            self.assertDictEqual(o.parameters, {'ot': '4'})
+
+        with self.subTest("origin"):
+            o = Origin(Point(-51.7292, -59.2135))
+            self.assertDictEqual(o.parameters, {'origin': '-51.7292, -59.2135'})
+            o = Origin((-51.7292, -59.2135))
+            self.assertDictEqual(o.parameters, {'origin': '-51.7292, -59.2135'})
+            o = Origin([-51.7292, -59.2135])
+            self.assertDictEqual(o.parameters, {'origin': '-51.7292, -59.2135'})
+
+        with self.subTest("radius"):
+            o = Origin((-51.7292, -59.2135), radius=5)
+            self.assertDictEqual(o.parameters, {'origin': '-51.7292, -59.2135', 'radius': '5km'})
+
+        with self.subTest("imperial"):
+            o = Origin((-51.7292, -59.2135), radius=5, unit=Origin.UnitSystem.imperial)
+            self.assertDictEqual(o.parameters, {'origin': '-51.7292, -59.2135', 'radius': '5mi'})

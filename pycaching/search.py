@@ -101,7 +101,7 @@ class Origin(UrlParameters):
         super().__init__()
 
         if point is None:
-            self._parameters['ot'] = 4
+            self._parameters['ot'] = '4'
         else:
             if type(point) != Point:
                 point = Point(point)
