@@ -144,3 +144,71 @@ class TestHelperObjects(unittest.TestCase):
             self.assertDictEqual(s.parameters, {'sort': 'FavoritePoint', 'asc': 'False'})
             s = Sorting(Sorting.Columns.Favorites, Sorting.Order.ascending)
             self.assertDictEqual(s.parameters, {'sort': 'FavoritePoint', 'asc': 'True'})
+
+    def test_filter_range(self):
+        with self.subTest("single int"):
+            f = Filter(terrain=1)
+            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertEqual(f.terrain, 1.0)
+
+        with self.subTest("single float"):
+            f = Filter(terrain=1.0)
+            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertEqual(f.terrain, 1.0)
+
+        with self.subTest("single float"):
+            f = Filter(terrain=1.7)
+            self.assertEqual(f.parameters, {'t': '1.5'})
+            self.assertEqual(f.terrain, 1.5)
+
+        with self.subTest("single string(int)"):
+            f = Filter(terrain="1")
+            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertEqual(f.terrain, 1.0)
+
+        with self.subTest("single string(float)"):
+            f = Filter(terrain="1.0")
+            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertEqual(f.terrain, 1.0)
+
+        with self.subTest("single float / max-value"):
+            f = Filter(terrain=4.5)
+            self.assertEqual(f.parameters, {'t': '4.5'})
+            self.assertEqual(f.terrain, 4.5)
+
+        with self.subTest("single string(float) / max-value"):
+            f = Filter(terrain="4.5")
+            self.assertEqual(f.parameters, {'t': '4.5'})
+            self.assertEqual(f.terrain, 4.5)
+
+        with self.subTest("tuple"):
+            f = Filter(terrain=(1, 5))
+            self.assertEqual(f.parameters, {'t': '1-5'})
+            self.assertEqual(f.terrain, (1.0, 5.0))
+
+        with self.subTest("tuple - reverse"):
+            f = Filter(terrain=(5, 1))
+            self.assertEqual(f.parameters, {'t': '1-5'})
+            self.assertEqual(f.terrain, (1.0, 5.0))
+
+        with self.subTest("tuple - equal"):
+            f = Filter(terrain=(3, 3))
+            self.assertEqual(f.parameters, {'t': '3'})
+            self.assertEqual(f.terrain, 3)
+
+        with self.subTest("tuple - string & float"):
+            f = Filter(terrain=("4.5", 1.5))
+            self.assertEqual(f.parameters, {'t': '1.5-4.5'})
+            self.assertEqual(f.terrain, (1.5, 4.5))
+
+        with self.subTest("list"):
+            f = Filter(terrain=[3.5, "2.5"])
+            self.assertEqual(f.parameters, {'t': '2.5-3.5'})
+            self.assertEqual(f.terrain, (2.5, 3.5))
+
+    def test_filter(self):
+        with self.subTest("terrain & difficulty"):
+            f = Filter(terrain=(1, 5), difficulty=(5, 1))
+            self.assertEqual(f.parameters, {'t': '1-5', 'd': '1-5'})
+            self.assertEqual(f.terrain, (1.0, 5.0))
+            self.assertEqual(f.difficulty, (1.0, 5.0))
