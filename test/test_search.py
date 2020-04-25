@@ -146,6 +146,11 @@ class TestHelperObjects(unittest.TestCase):
             self.assertDictEqual(s.parameters, {'sort': 'FavoritePoint', 'asc': 'True'})
 
     def test_filter_range(self):
+        with self.subTest("not set"):
+            f = Filter(terrain=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.terrain, None)
+
         with self.subTest("single int"):
             f = Filter(terrain=1)
             self.assertEqual(f.parameters, {'t': '1'})
@@ -206,9 +211,36 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.parameters, {'t': '2.5-3.5'})
             self.assertEqual(f.terrain, (2.5, 3.5))
 
+    def test_filter_bool(self):
+        with self.subTest("not set"):
+            f = Filter(found=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.found, None)
+
+        with self.subTest("false"):
+            f = Filter(found=False)
+            self.assertEqual(f.parameters, {'f': '2'})
+            self.assertEqual(f.found, False)
+
+        with self.subTest("true"):
+            f = Filter(found=True)
+            self.assertEqual(f.parameters, {'f': '1'})
+            self.assertEqual(f.found, True)
+
+        with self.subTest("zero"):
+            f = Filter(found=0)
+            self.assertEqual(f.parameters, {'f': '2'})
+            self.assertEqual(f.found, False)
+
+        with self.subTest("positive"):
+            f = Filter(found=42)
+            self.assertEqual(f.parameters, {'f': '1'})
+            self.assertEqual(f.found, True)
+
     def test_filter(self):
         with self.subTest("terrain & difficulty"):
             f = Filter(terrain=(1, 5), difficulty=(5, 1))
             self.assertEqual(f.parameters, {'t': '1-5', 'd': '1-5'})
             self.assertEqual(f.terrain, (1.0, 5.0))
             self.assertEqual(f.difficulty, (1.0, 5.0))
+

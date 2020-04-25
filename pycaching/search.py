@@ -132,9 +132,9 @@ class Filter(UrlParameters):
         if name not in self._parameters:
             return None  # TODO check if raise KeyError is better ???
         else:
-            if self._parameters[name] == 1:
+            if self._parameters[name] == '2':
                 return False
-            elif self._parameters[name] == 2:
+            elif self._parameters[name] == '1':
                 return True
             else:
                 return None
@@ -142,7 +142,8 @@ class Filter(UrlParameters):
     def __helper_set_bool(self, name, value):
         if value is not None:
             if type(value) != bool:
-                raise TypeError
+                value = bool(value)
+
             self._parameters[name] = '1' if value else '2'
         else:
             self.remove_parameters(name)
