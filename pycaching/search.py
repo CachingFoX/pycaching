@@ -114,15 +114,19 @@ class Origin(UrlParameters):
 
 
 class Filter(UrlParameters):
-    def __init__(self, enabled=None, found=None):
+    def __init__(self, enabled=None, found=None, terrain=None, difficulty=None):
         """
 
         :param enabled:
         :param found:
         """
         super().__init__()
+        self._raw_parameters = {}
+
         self.enabled = enabled
         self.found = found
+        self.terrain = terrain
+        self.difficulty = difficulty
 
     def __helper_get_bool(self, name):
         if name not in self._parameters:
@@ -143,6 +147,59 @@ class Filter(UrlParameters):
         else:
             self.remove_parameters(name)
 
+    def __helper_get_range(self, name):
+        if name not in self._parameters:
+            return None
+        else:
+            return self._raw_parameters[name]
+
+    def __helper_set_range(self, name, value):
+        """
+        Convert a 1-5 star range with 0.5 steps into a string
+
+        :param name:
+        :param value:
+        :return:
+        """
+        if value is None:
+            if name in self._raw_parameters:
+                del self._raw_parameters[name]
+            self.remove_parameters(name)
+            return
+
+        if type(value) == int or type(value) == float or type(value) == str:
+            value = (float(value), float(value))  # convert int or float value into a tuple
+
+        if type(value) == list:
+            value = tuple(i for i in value)
+
+        if type(value) != tuple:  # TODO check for list
+            raise TypeError("expected a tuple, int, float, str")
+
+        if len(value) != 2:
+            raise ValueError("expected tuple with one or two items")
+
+        v0 = int(float(value[0]) * 2) / 2  # only steps of 0.5 are allowed
+        if not (1 <= v0 <= 5):
+            raise ValueError('Value ({0}) is out of range.'.format(value[0]))
+
+        v1 = int(float(value[1]) * 2) / 2  # only steps of 0.5 are allowed
+        if not (1 <= v1 <= 5):
+            raise ValueError('Value ({0}) is out of range.'.format(value[1]))
+
+        if v0 < v1:
+            self._result = '{0}-{1}'.format(v0, v1)
+            self._raw_parameters[name] = (v0, v1)
+        elif v0 > v1:
+            self._result = '{0}-{1}'.format(v1, v0)
+            self._raw_parameters[name] = (v1, v0)
+        else:
+            self._result = str(v0)
+            self._raw_parameters[name] = v0
+
+        self._parameters[name] = self._result.replace('.0', '')  # remove .0 from string
+
+
     @property
     def enabled(self):
         return self.__helper_get_bool('e')
@@ -158,3 +215,20 @@ class Filter(UrlParameters):
     @found.setter
     def found(self, value):
         return self.__helper_set_bool('f', value)
+
+    @property
+    def terrain(self):
+        return self.__helper_get_range('t')
+
+    @terrain.setter
+    def terrain(self, value):
+        return self.__helper_set_range('t', value)
+
+    @property
+    def difficulty(self):
+        return self.__helper_get_range('d')
+
+    @difficulty.setter
+    def difficulty(self, value):
+        return self.__helper_set_range('d', value)
+
