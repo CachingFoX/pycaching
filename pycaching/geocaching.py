@@ -14,7 +14,7 @@ from pycaching.log import Log, Type as LogType
 from pycaching.geo import Point
 from pycaching.trackable import Trackable
 from pycaching.errors import Error, NotLoggedInException, LoginFailedException, PMOnlyException
-from pycaching.search import SortColumn
+from pycaching.search import Sorting, Origin, Filter
 
 class Geocaching(object):
     """Provides some basic methods for communicating with geocaching.com website.
@@ -231,9 +231,9 @@ class Geocaching(object):
         :param int limit: Maximum number of caches to generate.
         """
         logging.info("Searching at {}".format(point))
-        return self.search_advanced(point=point, limit=limit)
+        return self.search_advanced(origin=point, limit=limit)
 
-    def search_advanced(self, point=None, radius=None, imperial=False, sort_column=None, sort_ascend=None, limit=float("inf")):
+    def search_advanced(self, origin=Origin(), filter=Filter(), sorting=Sorting(), limit=float("inf")):
         """
         Returns a generator of caches from a search
 
@@ -241,11 +241,9 @@ class Geocaching(object):
         :class:`.Cache`objects filled with data from search page. You can provide limit as convenient way to stop
         generator after certain number of caches.
 
-        :param .geo.Point point: Search center point (optional)
-        :param int radius: Search radius in kilometers or miles (see also parameter imperial)
-        :param bool imperial: If it True, radius in handle as miles instead of kilometers.
-        :param search.SortColumn sort_column:
-        :param sort_ascend: True (None) means ascend, False means descend
+        :param .search.Origin origin: Search center point (optional)
+        :param .search.Filter filter: Specifies a filter with different search parameters
+        :param .search.Sorting sorting: Specifies parameters for sorting
         :param int limit: Maximum number of caches to generate. Number is limited to 1000 by Groundspeak.
 
         Parameter :param:radius will be ignored in there no parameter :param:point.
@@ -254,23 +252,14 @@ class Geocaching(object):
         start_index = 0
         parameters = {}
 
-        if point is None:
-            parameters['ot'] = 4
-        else:
-            assert hasattr(point, "format") and callable(point.format)
-            parameters['origin'] = point.format_decimal()
+        origin = origin if type(origin) == Origin else Origin(point=origin)
 
-            if radius is not None:
-                radius = int(radius)
-                if not radius >= 1:
-                    raise ValueError
-                parameters['radius'] = '{}{}'.format(int(radius), 'mi' if imperial else 'km')
+        if type(filter) != Filter or type(sorting) != Sorting:
+            raise TypeError
 
-        if sort_column is not None:
-            if type(sort_column) != SortColumn:
-                raise TypeError
-            parameters['sort'] = str(sort_column)
-            parameters['asc'] = 'True' if sort_ascend else 'False'
+        parameters.update(origin.parameters)
+        parameters.update(filter.parameters)
+        parameters.update(sorting.parameters)
 
         while True:
             # get one page
