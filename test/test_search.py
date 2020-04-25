@@ -15,7 +15,7 @@ from pycaching import Cache, Geocaching, Point, Rectangle
 from pycaching.errors import NotLoggedInException, LoginFailedException, PMOnlyException
 from . import username as _username, password as _password, NetworkedTest
 import logging
-from pycaching.search import SortColumn
+from pycaching.search import Sorting, Origin
 
 # logging.root.setLevel(logging.DEBUG)
 
@@ -61,23 +61,22 @@ class TestMethods(NetworkedTest):
 
         with self.subTest("with_radius"):
             with self.recorder.use_cassette('search_with_radius'):
-                results = self.gc.search_advanced(Point(38.5314833, -28.63125), radius=10)
+                results = self.gc.search_advanced(Origin(Point(38.5314833, -28.63125), radius=10))
                 for index, item in enumerate(results):
                     print("{} {} {}".format(index+1, item, item.name))
                 self.assertEqual(index + 1, 62)
 
         with self.subTest("with_radius_imperial"):
             with self.recorder.use_cassette('search_with_radius_imperial'):
-                results = self.gc.search_advanced(Point(38.5314833, -28.63125), radius=5, imperial=True)
+                results = self.gc.search_advanced(Origin( (38.5314833, -28.63125), radius=5, unit=Origin.UnitSystem.imperial))
                 for index, item in enumerate(results):
                     print("{} {} {}".format(index+1, item, item.name))
                 self.assertEqual(index + 1, 45)
 
-
-
         with self.subTest("top10"):
             with self.recorder.use_cassette('search_top10'):
-                results = self.gc.search_advanced(sort_column=SortColumn.Favorites, sort_ascend=False, limit=10)
+                s = Sorting(Sorting.Columns.Favorites, Sorting.Order.descending)
+                results = self.gc.search_advanced(sorting=s, limit=10)
                 data = {}
                 favorites = []
                 for index, item in enumerate(results):
