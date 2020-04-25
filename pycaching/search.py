@@ -6,6 +6,9 @@ class UrlParameters():
     def __init__(self):
         self._parameters = {}
 
+    def __repr__(self):
+        return "{}".format(self._parameters)
+
     @property
     def parameters(self):
         return self._parameters
@@ -71,12 +74,6 @@ class Sorting(UrlParameters):
             self._parameters['sort'] = str(column)
             self._parameters['asc'] = str(order)
 
-    def __repr__(self):
-        if 'sort' not in self._parameters:
-            return "no sorting order"
-        else:
-            return "column={} ascending={}".format(self._parameters['sort'], self._parameters['asc'])
-
 
 class Origin(UrlParameters):
     class UnitSystem(enum.Enum):
@@ -114,14 +111,6 @@ class Origin(UrlParameters):
                 if radius < 1:
                     raise ValueError
                 self._parameters['radius'] = '{}{}'.format(int(radius), str(unit))
-
-    def __repr__(self):
-        if 'origin' not in self._parameters:
-            return "no center"
-        elif 'radius' not in self._parameters:
-            return "{}".format(self._parameters['origin'])
-        else:
-            return "{} {}".format(self._parameters['origin'], self._parameters['radius'])
 
 
 class Filter(UrlParameters):
