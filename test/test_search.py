@@ -320,3 +320,18 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.parameters, {'o': '1'})
             self.assertEqual(f.owner, True)
             self.assertEqual(type(f.owner), bool)
+
+        with self.subTest("Keyword"):
+            f = Filter(keyword=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.keyword, None)
+
+            f = Filter(keyword='fox')
+            self.assertEqual(f.parameters, {'kw': 'fox'})
+            self.assertEqual(f.keyword, 'fox')
+            self.assertEqual(type(f.keyword), str)
+
+            f = Filter(keyword=3.141592)
+            self.assertEqual(f.parameters, {'kw': '3.141592'})
+            self.assertEqual(f.keyword, '3.141592')
+            self.assertEqual(type(f.keyword), str)
