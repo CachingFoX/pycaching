@@ -114,7 +114,7 @@ class Origin(UrlParameters):
 
 
 class Filter:
-    def __init__(self, enabled=None, found=None, terrain=None, difficulty=None):
+    def __init__(self, enabled=None, found=None, terrain=None, difficulty=None, personal_note=None):
         """
 
         :param enabled:
@@ -124,13 +124,15 @@ class Filter:
             'enabled': None,
             'found': None,
             'terrain': None,
-            'difficulty': None
+            'difficulty': None,
+            'personal_note': None
         }
 
         self.enabled = enabled
         self.found = found
         self.terrain = terrain
         self.difficulty = difficulty
+        self.personal_note = personal_note
 
     def __repr__(self):
         return "{}".format(self.parameters)
@@ -142,6 +144,7 @@ class Filter:
             'd': self.__helper_get_range(self.difficulty),
             'f': self.__helper_get_bool(self.found),
             'e': self.__helper_get_bool(self.enabled),
+            'note': self.__helper_get_bool(self.personal_note)
         }
         # remove all items in the dict with the value None
         for key in list(q):
@@ -243,3 +246,11 @@ class Filter:
     @difficulty.setter
     def difficulty(self, value):
         self.__helper_set_range('difficulty', value)
+
+    @property
+    def personal_note(self):
+        return self._parameters['personal_note']
+
+    @personal_note.setter
+    def personal_note(self,value):
+        self.__helper_set_bool('personal_note', value)

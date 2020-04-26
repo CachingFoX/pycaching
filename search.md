@@ -40,10 +40,11 @@ TODO: support miles (mi)
 
 # Parameters
 ## supported
-* Found status
 * Terrain 
 * Difficulty
 * Cache status
+* Personal Note
+* Found status
 
 ## not supported
 * Geocache types (and group of types)
@@ -51,7 +52,7 @@ TODO: support miles (mi)
 * Geocache size
 * Membership type
 * Corrected Coordinates
-* Personal Note
+
 * Favorite points
 * Owner ship
 * Hidden by
