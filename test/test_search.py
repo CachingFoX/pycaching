@@ -238,6 +238,10 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.found, True)
 
     def test_filter(self):
+        with self.subTest("empty filter"):
+            f = Filter()
+            self.assertEqual(f.parameters, {})
+
         with self.subTest("terrain & difficulty"):
             f = Filter(terrain=(1, 5), difficulty=(5, 1))
             self.assertEqual(f.parameters, {'t': '1-5', 'd': '1-5'})

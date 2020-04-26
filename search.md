@@ -58,9 +58,8 @@ personal_note=None, corrected_coordinates=None, premium=None)
 
 ## not supported
 * Geocache types (and group of types)
-* Worldwide or origin with radius
 * Geocache size
-* Favorite points
+* Favorite points (int)
 * Owner ship
 * Hidden by
 * Keyword
@@ -68,8 +67,7 @@ personal_note=None, corrected_coordinates=None, premium=None)
 * Place Date (after, before, between, on)
 * Limit to country or region (includes a enumeration of countries and regions)
 
-        if premium is not None:
-            params['p'] = '1' if enabled else '2'
+  
 
 
 
