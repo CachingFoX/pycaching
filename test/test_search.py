@@ -287,3 +287,21 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.parameters, {'p': '1'})
             self.assertEqual(f.premium, True)
 
+        with self.subTest("Minimum Favorite Points"):
+            f = Filter(favorite_points=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.favorite_points, None)
+
+            f = Filter(favorite_points=4711)
+            self.assertEqual(f.parameters, {'fav': '4711'})
+            self.assertEqual(f.favorite_points, 4711)
+            self.assertEqual(type(f.favorite_points), int)
+
+            f = Filter(favorite_points=4711.42)
+            self.assertEqual(f.parameters, {'fav': '4711'})
+            self.assertEqual(type(f.favorite_points), int)
+
+            f = Filter(favorite_points="4711")
+            self.assertEqual(f.parameters, {'fav': '4711'})
+            self.assertEqual(f.favorite_points, 4711)
+            self.assertEqual(type(f.favorite_points), int)
