@@ -39,12 +39,18 @@ TODO: support miles (mi)
 
 
 # Parameters
+```
+class Filter(enabled=None, found=None, terrain=None, difficulty=None, 
+personal_note=None, corrected_coordinates=None)
+```
 ## supported
 * Terrain 
 * Difficulty
 * Cache status
 * Personal Note
 * Found status
+* Corrected Coordinates
+* 
 
 ## not supported
 * Geocache types (and group of types)
@@ -70,5 +76,3 @@ TODO: support miles (mi)
         if minimum_favorite_points is not None:
             params['fav'] = str(int(minimum_favorite_points))
 
-        if personal_note is not None:
-            params['note'] = '1' if personal_note else '2'
