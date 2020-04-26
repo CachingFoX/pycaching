@@ -244,3 +244,16 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.terrain, (1.0, 5.0))
             self.assertEqual(f.difficulty, (1.0, 5.0))
 
+        with self.subTest("Personal Note"):
+            f = Filter(personal_note=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.personal_note, None)
+
+            f = Filter(personal_note=False)
+            self.assertEqual(f.parameters, {'note': '2'})
+            self.assertEqual(f.personal_note, False)
+
+            f = Filter(personal_note=True)
+            self.assertEqual(f.parameters, {'note': '1'})
+            self.assertEqual(f.personal_note, True)
+
