@@ -115,7 +115,7 @@ class Origin(UrlParameters):
 
 class Filter:
     def __init__(self, enabled=None, found=None, terrain=None, difficulty=None, personal_note=None,
-                 corrected_coordinates=None, premium=None):
+                 corrected_coordinates=None, premium=None, favorite_points=None):
         """
 
         :param enabled:
@@ -128,7 +128,8 @@ class Filter:
             'difficulty': None,
             'personal_note': None,
             'corrected_coordinates': None,
-            'premium': None
+            'premium': None,
+            'favorite_points': None
         }
 
         self.enabled = enabled
@@ -138,6 +139,7 @@ class Filter:
         self.personal_note = personal_note
         self.corrected_coordinates = corrected_coordinates
         self.premium = premium
+        self.favorite_points = favorite_points
 
     def __repr__(self):
         return "{}".format(self.parameters)
@@ -151,7 +153,8 @@ class Filter:
             'e': self.__helper_get_bool(self.enabled),
             'note': self.__helper_get_bool(self.personal_note),
             'cc': self.__helper_get_bool(self.corrected_coordinates),
-            'p': self.__helper_get_bool(self.premium)
+            'p': self.__helper_get_bool(self.premium),
+            'fav': str(self.favorite_points) if self.favorite_points is not None else None
         }
         # remove all items in the dict with the value None
         for key in list(q):
@@ -278,3 +281,12 @@ class Filter:
     def premium(self, value):
         self.__helper_set_bool('premium', value)
 
+    @property
+    def favorite_points(self):
+        return self._parameters['favorite_points']
+
+    @favorite_points.setter
+    def favorite_points(self, value):
+        if value is not None:
+            value = int(value)
+        self._parameters['favorite_points'] = value
