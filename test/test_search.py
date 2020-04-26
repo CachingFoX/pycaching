@@ -257,3 +257,16 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.parameters, {'note': '1'})
             self.assertEqual(f.personal_note, True)
 
+        with self.subTest("Corrected Coordinates"):
+            f = Filter(corrected_coordinates=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.corrected_coordinates, None)
+
+            f = Filter(corrected_coordinates=False)
+            self.assertEqual(f.parameters, {'cc': '2'})
+            self.assertEqual(f.corrected_coordinates, False)
+
+            f = Filter(corrected_coordinates=True)
+            self.assertEqual(f.parameters, {'cc': '1'})
+            self.assertEqual(f.corrected_coordinates, True)
+
