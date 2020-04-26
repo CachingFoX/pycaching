@@ -41,7 +41,7 @@ TODO: support miles (mi)
 # Parameters
 ```
 class Filter(enabled=None, found=None, terrain=None, difficulty=None, 
-personal_note=None, corrected_coordinates=None)
+personal_note=None, corrected_coordinates=None, premium=None)
 ```
 ## supported
 * Terrain 
@@ -50,15 +50,16 @@ personal_note=None, corrected_coordinates=None)
 * Personal Note
 * Found status
 * Corrected Coordinates
-* 
+* Membership type
+
+# membership
+
+# 
 
 ## not supported
 * Geocache types (and group of types)
 * Worldwide or origin with radius
 * Geocache size
-* Membership type
-* Corrected Coordinates
-
 * Favorite points
 * Owner ship
 * Hidden by
@@ -70,8 +71,7 @@ personal_note=None, corrected_coordinates=None)
         if premium is not None:
             params['p'] = '1' if enabled else '2'
 
-        if updated_coordinates is not None:
-            params['cc'] = '1' if updated_coordinates else '2'
+
 
         if minimum_favorite_points is not None:
             params['fav'] = str(int(minimum_favorite_points))

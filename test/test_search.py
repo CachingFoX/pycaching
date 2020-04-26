@@ -270,3 +270,16 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.parameters, {'cc': '1'})
             self.assertEqual(f.corrected_coordinates, True)
 
+        with self.subTest("Membership type"):
+            f = Filter(premium=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.premium, None)
+
+            f = Filter(premium=False)
+            self.assertEqual(f.parameters, {'p': '2'})
+            self.assertEqual(f.premium, False)
+
+            f = Filter(premium=True)
+            self.assertEqual(f.parameters, {'p': '1'})
+            self.assertEqual(f.premium, True)
+
