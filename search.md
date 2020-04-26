@@ -53,12 +53,12 @@ personal_note=None, corrected_coordinates=None, premium=None)
 * Membership type
 * Favorite points
 * Ownership
+* Keyword
 
 ## not supported
 * Geocache types (and group of types)
 * Geocache size
 * Hidden by (users)
-* Keyword
 * Not found by (users)
 * Place Date (after, before, between, on)
 * Limit to country or region (includes a enumeration of countries and regions)
