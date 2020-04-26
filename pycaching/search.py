@@ -113,46 +113,65 @@ class Origin(UrlParameters):
                 self._parameters['radius'] = '{}{}'.format(int(radius), str(unit))
 
 
-class Filter(UrlParameters):
+class Filter:
     def __init__(self, enabled=None, found=None, terrain=None, difficulty=None):
         """
 
         :param enabled:
         :param found:
         """
-        super().__init__()
-        self._raw_parameters = {}
+        self._parameters = {
+            'enabled': None,
+            'found': None,
+            'terrain': None,
+            'difficulty': None
+        }
 
         self.enabled = enabled
         self.found = found
         self.terrain = terrain
         self.difficulty = difficulty
 
-    def __helper_get_bool(self, name):
-        if name not in self._parameters:
-            return None  # TODO check if raise KeyError is better ???
-        else:
-            if self._parameters[name] == '2':
-                return False
-            elif self._parameters[name] == '1':
-                return True
-            else:
-                return None
+    def __repr__(self):
+        return "{}".format(self.parameters)
+
+    @property
+    def parameters(self):
+        q = {
+            't': self.__helper_get_range(self.terrain),
+            'd': self.__helper_get_range(self.difficulty),
+            'f': self.__helper_get_bool(self.found),
+            'e': self.__helper_get_bool(self.enabled),
+        }
+        # remove all items in the dict with the value None
+        for key in list(q):
+            if q[key] is None:
+                del q[key]
+
+        return q
+
+    #@staticmethod
+    def __helper_get_bool(self, value):
+        if value is None:
+            return None
+        return '1' if value else '2'
 
     def __helper_set_bool(self, name, value):
-        if value is not None:
-            if type(value) != bool:
-                value = bool(value)
+        if value is not None and type(value) != bool:
+            value = bool(value)
+        self._parameters[name] = value
 
-            self._parameters[name] = '1' if value else '2'
-        else:
-            self.remove_parameters(name)
-
-    def __helper_get_range(self, name):
-        if name not in self._parameters:
+    # @staticmethod
+    def __helper_get_range(self, value):
+        if value is None:
             return None
+
+        if type(value) == tuple:
+            result = '{0}-{1}'.format(value[0], value[1])
         else:
-            return self._raw_parameters[name]
+            result = str(value)
+
+        return result.replace('.0', '')  # remove .0 from string
 
     def __helper_set_range(self, name, value):
         """
@@ -163,9 +182,7 @@ class Filter(UrlParameters):
         :return:
         """
         if value is None:
-            if name in self._raw_parameters:
-                del self._raw_parameters[name]
-            self.remove_parameters(name)
+            self._parameters[name] = None
             return
 
         if type(value) == int or type(value) == float or type(value) == str:
@@ -174,7 +191,7 @@ class Filter(UrlParameters):
         if type(value) == list:
             value = tuple(i for i in value)
 
-        if type(value) != tuple:  # TODO check for list
+        if type(value) != tuple:
             raise TypeError("expected a tuple, int, float, str")
 
         if len(value) != 2:
@@ -189,47 +206,40 @@ class Filter(UrlParameters):
             raise ValueError('Value ({0}) is out of range.'.format(value[1]))
 
         if v0 < v1:
-            self._result = '{0}-{1}'.format(v0, v1)
-            self._raw_parameters[name] = (v0, v1)
+            self._parameters[name] = (v0, v1)
         elif v0 > v1:
-            self._result = '{0}-{1}'.format(v1, v0)
-            self._raw_parameters[name] = (v1, v0)
+            self._parameters[name] = (v1, v0)
         else:
-            self._result = str(v0)
-            self._raw_parameters[name] = v0
-
-        self._parameters[name] = self._result.replace('.0', '')  # remove .0 from string
-
+            self._parameters[name] = v0
 
     @property
     def enabled(self):
-        return self.__helper_get_bool('e')
+        return self._parameters['enabled']
 
     @enabled.setter
     def enabled(self, value):
-        return self.__helper_set_bool('e', value)
+        self.__helper_set_bool('enabled', value)
 
     @property
     def found(self):
-        return self.__helper_get_bool('f')
+        return self._parameters['found']
 
     @found.setter
     def found(self, value):
-        return self.__helper_set_bool('f', value)
+        self.__helper_set_bool('found', value)
 
     @property
     def terrain(self):
-        return self.__helper_get_range('t')
+        return self._parameters['terrain']
 
     @terrain.setter
     def terrain(self, value):
-        return self.__helper_set_range('t', value)
+        self.__helper_set_range('terrain', value)
 
     @property
     def difficulty(self):
-        return self.__helper_get_range('d')
+        return self._parameters['difficulty']
 
     @difficulty.setter
     def difficulty(self, value):
-        return self.__helper_set_range('d', value)
-
+        self.__helper_set_range('difficulty', value)
