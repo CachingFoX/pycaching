@@ -2,7 +2,7 @@ import enum
 from pycaching.geo import Point
 
 
-class UrlParameters():
+class UrlParameters:
     def __init__(self):
         self._parameters = {}
 
@@ -61,11 +61,11 @@ class Sorting(UrlParameters):
 
         :param column:
         :param order:
-        :param search.SortColumn sort_column: Defines the search column
-        :param sort_ascend: True (None) means ascend, False means descend
+        :param column: Defines the search column
+        :param order: Defines the sort order (default: ascending)
         """
         super().__init__()
-        # TODO raise excpetion if login user basic member and sort_column is given
+        # TODO raise exception if login user basic member and sort_column is given
         if column is not None:
 
             if type(column) != Sorting.Columns or type(order) != Sorting.Order:
@@ -91,7 +91,7 @@ class Origin(UrlParameters):
         """
         :param point: Search center point (optional)
         :param int radius: Search radius in kilometers or miles (see also parameter imperial)
-        :param bool imperial: If it True, radius in handle as miles instead of kilometers.
+        :param UnitSystem unit: defines the unit system (default: metric).
 
         Parameter point can be a None, geo.Point object, a tuple or list with two floats as latitude and longitude
         """
