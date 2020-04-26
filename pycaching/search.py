@@ -115,7 +115,7 @@ class Origin(UrlParameters):
 
 class Filter:
     def __init__(self, enabled=None, found=None, terrain=None, difficulty=None, personal_note=None,
-                 corrected_coordinates=None, premium=None, favorite_points=None):
+                 corrected_coordinates=None, premium=None, favorite_points=None, owner=None):
         """
 
         :param enabled:
@@ -129,7 +129,8 @@ class Filter:
             'personal_note': None,
             'corrected_coordinates': None,
             'premium': None,
-            'favorite_points': None
+            'favorite_points': None,
+            'owner': None
         }
 
         self.enabled = enabled
@@ -140,6 +141,7 @@ class Filter:
         self.corrected_coordinates = corrected_coordinates
         self.premium = premium
         self.favorite_points = favorite_points
+        self.owner = owner
 
     def __repr__(self):
         return "{}".format(self.parameters)
@@ -154,7 +156,8 @@ class Filter:
             'note': self.__helper_get_bool(self.personal_note),
             'cc': self.__helper_get_bool(self.corrected_coordinates),
             'p': self.__helper_get_bool(self.premium),
-            'fav': str(self.favorite_points) if self.favorite_points is not None else None
+            'fav': str(self.favorite_points) if self.favorite_points is not None else None,
+            'o': self.__helper_get_bool(self.owner)
         }
         # remove all items in the dict with the value None
         for key in list(q):
@@ -290,3 +293,11 @@ class Filter:
         if value is not None:
             value = int(value)
         self._parameters['favorite_points'] = value
+
+    @property
+    def owner(self):
+        return self._parameters['owner']
+
+    @owner.setter
+    def owner(self, value):
+        self.__helper_set_bool('owner', value)

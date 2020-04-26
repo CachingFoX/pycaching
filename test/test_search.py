@@ -305,3 +305,18 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.parameters, {'fav': '4711'})
             self.assertEqual(f.favorite_points, 4711)
             self.assertEqual(type(f.favorite_points), int)
+
+        with self.subTest("Ownership"):
+            f = Filter(owner=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.owner, None)
+
+            f = Filter(owner=False)
+            self.assertEqual(f.parameters, {'o': '2'})
+            self.assertEqual(f.owner, False)
+            self.assertEqual(type(f.owner), bool)
+
+            f = Filter(owner=True)
+            self.assertEqual(f.parameters, {'o': '1'})
+            self.assertEqual(f.owner, True)
+            self.assertEqual(type(f.owner), bool)

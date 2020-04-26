@@ -51,19 +51,15 @@ personal_note=None, corrected_coordinates=None, premium=None)
 * Found status
 * Corrected Coordinates
 * Membership type
-
-# membership
-
-# 
+* Favorite points
+* Ownership
 
 ## not supported
 * Geocache types (and group of types)
 * Geocache size
-* Favorite points (int)
-* Owner ship
-* Hidden by
+* Hidden by (users)
 * Keyword
-* Not found by
+* Not found by (users)
 * Place Date (after, before, between, on)
 * Limit to country or region (includes a enumeration of countries and regions)
 
