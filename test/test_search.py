@@ -326,6 +326,18 @@ class TestHelperObjects(unittest.TestCase):
             self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.keyword, None)
 
+            f = Filter(keyword='')
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.keyword, None)
+
+            f = Filter(keyword=[])
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.keyword, None)
+
+            f = Filter(keyword=())
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.keyword, None)
+
             f = Filter(keyword='fox')
             self.assertDictEqual(f.parameters, {'kw': 'fox'})
             self.assertEqual(f.keyword, 'fox')
@@ -338,6 +350,18 @@ class TestHelperObjects(unittest.TestCase):
 
         with self.subTest("Hidden by"):
             f = Filter(hidden=None)
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.hidden, None)
+
+            f = Filter(hidden="")
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.hidden, None)
+
+            f = Filter(hidden=[])
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.hidden, None)
+
+            f = Filter(hidden=())
             self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.hidden, None)
 
