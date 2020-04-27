@@ -375,3 +375,48 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.hidden, '123')
             self.assertEqual(type(f.hidden), str)
 
+        with self.subTest("Not found by"):
+            f = Filter(not_found=None)
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.not_found, None)
+
+            f = Filter(not_found=[])
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.not_found, None)
+
+            f = Filter(not_found=())
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.not_found, None)
+
+            f = Filter(not_found="")
+            self.assertDictEqual(f.parameters, {})
+            self.assertEqual(f.not_found, None)
+
+            f = Filter(not_found="Geocaching HQ")
+            self.assertDictEqual(f.parameters, {'nfb[0]': 'Geocaching HQ'})
+            self.assertEqual(type(f.not_found), list)
+            for item in f.not_found:
+                self.assertEqual(type(item), str)
+            self.assertListEqual(f.not_found, ['Geocaching HQ'])
+
+            f = Filter(not_found=123)
+            self.assertDictEqual(f.parameters, {'nfb[0]': '123'})
+            self.assertEqual(type(f.not_found), list)
+            for item in f.not_found:
+                self.assertEqual(type(item), str)
+            self.assertListEqual(f.not_found, ['123'])
+
+            f = Filter(not_found=["Geocaching HQ"])
+            self.assertDictEqual(f.parameters, {'nfb[0]': 'Geocaching HQ'})
+            self.assertEqual(type(f.not_found), list)
+            for item in f.not_found:
+                self.assertEqual(type(item), str)
+            self.assertListEqual(f.not_found, ['Geocaching HQ'])
+
+            f = Filter(not_found=["Geocaching HQ", "Signal"])
+            self.assertDictEqual(f.parameters, {'nfb[0]': 'Geocaching HQ', 'nfb[1]': 'Signal'})
+            self.assertEqual(type(f.not_found), list)
+            for item in f.not_found:
+                self.assertEqual(type(item), str)
+            self.assertListEqual(f.not_found, ['Geocaching HQ', 'Signal'])
+
