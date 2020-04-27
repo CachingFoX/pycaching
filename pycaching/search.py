@@ -115,7 +115,8 @@ class Origin(UrlParameters):
 
 class Filter:
     def __init__(self, enabled=None, found=None, terrain=None, difficulty=None, personal_note=None,
-                 corrected_coordinates=None, premium=None, favorite_points=None, owner=None, keyword=None):
+                 corrected_coordinates=None, premium=None, favorite_points=None, owner=None, keyword=None,
+                 hidden=None):
         """
 
         :param enabled:
@@ -131,7 +132,8 @@ class Filter:
             'premium': None,
             'favorite_points': None,
             'owner': None,
-            'keyword': None
+            'keyword': None,
+            'hidden': None
         }
 
         self.enabled = enabled
@@ -144,6 +146,7 @@ class Filter:
         self.favorite_points = favorite_points
         self.owner = owner
         self.keyword = keyword
+        self.hidden = hidden
 
     def __repr__(self):
         return "{}".format(self.parameters)
@@ -160,7 +163,8 @@ class Filter:
             'p': self.__helper_get_bool(self.premium),
             'fav': str(self.favorite_points) if self.favorite_points is not None else None,
             'o': self.__helper_get_bool(self.owner),
-            'kw': self.keyword if self.keyword is not None else None
+            'kw': self.keyword if self.keyword is not None else None,
+            'owner[0]' : self.hidden if self.hidden is not None else None
         }
         # remove all items in the dict with the value None
         for key in list(q):
@@ -314,3 +318,14 @@ class Filter:
         if value is not None:
             value = str(value)
         self._parameters['keyword'] = value
+
+    @property
+    def hidden(self):
+        return self._parameters['hidden']
+
+    @hidden.setter
+    def hidden(self, value):
+        if value is not None:
+            value = str(value)
+        self._parameters['hidden'] = value
+
