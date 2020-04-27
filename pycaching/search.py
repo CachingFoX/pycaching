@@ -315,7 +315,9 @@ class Filter:
 
     @keyword.setter
     def keyword(self, value):
-        if value is not None:
+        if value is None or (type(value) in (str, list, tuple) and len(value) == 0):
+            value = None
+        else:
             value = str(value)
         self._parameters['keyword'] = value
 
@@ -325,7 +327,9 @@ class Filter:
 
     @hidden.setter
     def hidden(self, value):
-        if value is not None:
+        if value is None or (type(value) in (str, list, tuple) and len(value) == 0):
+            value = None
+        else:
             value = str(value)
         self._parameters['hidden'] = value
 
