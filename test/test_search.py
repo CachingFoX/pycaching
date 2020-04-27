@@ -335,3 +335,19 @@ class TestHelperObjects(unittest.TestCase):
             self.assertEqual(f.parameters, {'kw': '3.141592'})
             self.assertEqual(f.keyword, '3.141592')
             self.assertEqual(type(f.keyword), str)
+
+        with self.subTest("Hidden by"):
+            f = Filter(hidden=None)
+            self.assertEqual(f.parameters, {})
+            self.assertEqual(f.hidden, None)
+
+            f = Filter(hidden="Geocaching HQ")
+            self.assertEqual(f.parameters, { 'owner[0]': 'Geocaching HQ'})
+            self.assertEqual(f.hidden, 'Geocaching HQ')
+            self.assertEqual(type(f.hidden), str)
+
+            f = Filter(hidden=123)
+            self.assertEqual(f.parameters, { 'owner[0]': '123'})
+            self.assertEqual(f.hidden, '123')
+            self.assertEqual(type(f.hidden), str)
+
