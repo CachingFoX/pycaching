@@ -148,206 +148,206 @@ class TestHelperObjects(unittest.TestCase):
     def test_filter_range(self):
         with self.subTest("not set"):
             f = Filter(terrain=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.terrain, None)
 
         with self.subTest("single int"):
             f = Filter(terrain=1)
-            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertDictEqual(f.parameters, {'t': '1'})
             self.assertEqual(f.terrain, 1.0)
 
         with self.subTest("single float"):
             f = Filter(terrain=1.0)
-            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertDictEqual(f.parameters, {'t': '1'})
             self.assertEqual(f.terrain, 1.0)
 
         with self.subTest("single float"):
             f = Filter(terrain=1.7)
-            self.assertEqual(f.parameters, {'t': '1.5'})
+            self.assertDictEqual(f.parameters, {'t': '1.5'})
             self.assertEqual(f.terrain, 1.5)
 
         with self.subTest("single string(int)"):
             f = Filter(terrain="1")
-            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertDictEqual(f.parameters, {'t': '1'})
             self.assertEqual(f.terrain, 1.0)
 
         with self.subTest("single string(float)"):
             f = Filter(terrain="1.0")
-            self.assertEqual(f.parameters, {'t': '1'})
+            self.assertDictEqual(f.parameters, {'t': '1'})
             self.assertEqual(f.terrain, 1.0)
 
         with self.subTest("single float / max-value"):
             f = Filter(terrain=4.5)
-            self.assertEqual(f.parameters, {'t': '4.5'})
+            self.assertDictEqual(f.parameters, {'t': '4.5'})
             self.assertEqual(f.terrain, 4.5)
 
         with self.subTest("single string(float) / max-value"):
             f = Filter(terrain="4.5")
-            self.assertEqual(f.parameters, {'t': '4.5'})
+            self.assertDictEqual(f.parameters, {'t': '4.5'})
             self.assertEqual(f.terrain, 4.5)
 
         with self.subTest("tuple"):
             f = Filter(terrain=(1, 5))
-            self.assertEqual(f.parameters, {'t': '1-5'})
+            self.assertDictEqual(f.parameters, {'t': '1-5'})
             self.assertEqual(f.terrain, (1.0, 5.0))
 
         with self.subTest("tuple - reverse"):
             f = Filter(terrain=(5, 1))
-            self.assertEqual(f.parameters, {'t': '1-5'})
+            self.assertDictEqual(f.parameters, {'t': '1-5'})
             self.assertEqual(f.terrain, (1.0, 5.0))
 
         with self.subTest("tuple - equal"):
             f = Filter(terrain=(3, 3))
-            self.assertEqual(f.parameters, {'t': '3'})
+            self.assertDictEqual(f.parameters, {'t': '3'})
             self.assertEqual(f.terrain, 3)
 
         with self.subTest("tuple - string & float"):
             f = Filter(terrain=("4.5", 1.5))
-            self.assertEqual(f.parameters, {'t': '1.5-4.5'})
+            self.assertDictEqual(f.parameters, {'t': '1.5-4.5'})
             self.assertEqual(f.terrain, (1.5, 4.5))
 
         with self.subTest("list"):
             f = Filter(terrain=[3.5, "2.5"])
-            self.assertEqual(f.parameters, {'t': '2.5-3.5'})
+            self.assertDictEqual(f.parameters, {'t': '2.5-3.5'})
             self.assertEqual(f.terrain, (2.5, 3.5))
 
     def test_filter_bool(self):
         with self.subTest("not set"):
             f = Filter(found=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.found, None)
 
         with self.subTest("false"):
             f = Filter(found=False)
-            self.assertEqual(f.parameters, {'f': '2'})
+            self.assertDictEqual(f.parameters, {'f': '2'})
             self.assertEqual(f.found, False)
 
         with self.subTest("true"):
             f = Filter(found=True)
-            self.assertEqual(f.parameters, {'f': '1'})
+            self.assertDictEqual(f.parameters, {'f': '1'})
             self.assertEqual(f.found, True)
 
         with self.subTest("zero"):
             f = Filter(found=0)
-            self.assertEqual(f.parameters, {'f': '2'})
+            self.assertDictEqual(f.parameters, {'f': '2'})
             self.assertEqual(f.found, False)
 
         with self.subTest("positive"):
             f = Filter(found=42)
-            self.assertEqual(f.parameters, {'f': '1'})
+            self.assertDictEqual(f.parameters, {'f': '1'})
             self.assertEqual(f.found, True)
 
     def test_filter(self):
         with self.subTest("empty filter"):
             f = Filter()
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
 
         with self.subTest("terrain & difficulty"):
             f = Filter(terrain=(1, 5), difficulty=(5, 1))
-            self.assertEqual(f.parameters, {'t': '1-5', 'd': '1-5'})
+            self.assertDictEqual(f.parameters, {'t': '1-5', 'd': '1-5'})
             self.assertEqual(f.terrain, (1.0, 5.0))
             self.assertEqual(f.difficulty, (1.0, 5.0))
 
         with self.subTest("Personal Note"):
             f = Filter(personal_note=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.personal_note, None)
 
             f = Filter(personal_note=False)
-            self.assertEqual(f.parameters, {'note': '2'})
+            self.assertDictEqual(f.parameters, {'note': '2'})
             self.assertEqual(f.personal_note, False)
 
             f = Filter(personal_note=True)
-            self.assertEqual(f.parameters, {'note': '1'})
+            self.assertDictEqual(f.parameters, {'note': '1'})
             self.assertEqual(f.personal_note, True)
 
         with self.subTest("Corrected Coordinates"):
             f = Filter(corrected_coordinates=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.corrected_coordinates, None)
 
             f = Filter(corrected_coordinates=False)
-            self.assertEqual(f.parameters, {'cc': '2'})
+            self.assertDictEqual(f.parameters, {'cc': '2'})
             self.assertEqual(f.corrected_coordinates, False)
 
             f = Filter(corrected_coordinates=True)
-            self.assertEqual(f.parameters, {'cc': '1'})
+            self.assertDictEqual(f.parameters, {'cc': '1'})
             self.assertEqual(f.corrected_coordinates, True)
 
         with self.subTest("Membership type"):
             f = Filter(premium=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.premium, None)
 
             f = Filter(premium=False)
-            self.assertEqual(f.parameters, {'p': '2'})
+            self.assertDictEqual(f.parameters, {'p': '2'})
             self.assertEqual(f.premium, False)
 
             f = Filter(premium=True)
-            self.assertEqual(f.parameters, {'p': '1'})
+            self.assertDictEqual(f.parameters, {'p': '1'})
             self.assertEqual(f.premium, True)
 
         with self.subTest("Minimum Favorite Points"):
             f = Filter(favorite_points=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.favorite_points, None)
 
             f = Filter(favorite_points=4711)
-            self.assertEqual(f.parameters, {'fav': '4711'})
+            self.assertDictEqual(f.parameters, {'fav': '4711'})
             self.assertEqual(f.favorite_points, 4711)
             self.assertEqual(type(f.favorite_points), int)
 
             f = Filter(favorite_points=4711.42)
-            self.assertEqual(f.parameters, {'fav': '4711'})
+            self.assertDictEqual(f.parameters, {'fav': '4711'})
             self.assertEqual(type(f.favorite_points), int)
 
             f = Filter(favorite_points="4711")
-            self.assertEqual(f.parameters, {'fav': '4711'})
+            self.assertDictEqual(f.parameters, {'fav': '4711'})
             self.assertEqual(f.favorite_points, 4711)
             self.assertEqual(type(f.favorite_points), int)
 
         with self.subTest("Ownership"):
             f = Filter(owner=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.owner, None)
 
             f = Filter(owner=False)
-            self.assertEqual(f.parameters, {'o': '2'})
+            self.assertDictEqual(f.parameters, {'o': '2'})
             self.assertEqual(f.owner, False)
             self.assertEqual(type(f.owner), bool)
 
             f = Filter(owner=True)
-            self.assertEqual(f.parameters, {'o': '1'})
+            self.assertDictEqual(f.parameters, {'o': '1'})
             self.assertEqual(f.owner, True)
             self.assertEqual(type(f.owner), bool)
 
         with self.subTest("Keyword"):
             f = Filter(keyword=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.keyword, None)
 
             f = Filter(keyword='fox')
-            self.assertEqual(f.parameters, {'kw': 'fox'})
+            self.assertDictEqual(f.parameters, {'kw': 'fox'})
             self.assertEqual(f.keyword, 'fox')
             self.assertEqual(type(f.keyword), str)
 
             f = Filter(keyword=3.141592)
-            self.assertEqual(f.parameters, {'kw': '3.141592'})
+            self.assertDictEqual(f.parameters, {'kw': '3.141592'})
             self.assertEqual(f.keyword, '3.141592')
             self.assertEqual(type(f.keyword), str)
 
         with self.subTest("Hidden by"):
             f = Filter(hidden=None)
-            self.assertEqual(f.parameters, {})
+            self.assertDictEqual(f.parameters, {})
             self.assertEqual(f.hidden, None)
 
             f = Filter(hidden="Geocaching HQ")
-            self.assertEqual(f.parameters, { 'owner[0]': 'Geocaching HQ'})
+            self.assertDictEqual(f.parameters, { 'owner[0]': 'Geocaching HQ'})
             self.assertEqual(f.hidden, 'Geocaching HQ')
             self.assertEqual(type(f.hidden), str)
 
             f = Filter(hidden=123)
-            self.assertEqual(f.parameters, { 'owner[0]': '123'})
+            self.assertDictEqual(f.parameters, {'owner[0]': '123'})
             self.assertEqual(f.hidden, '123')
             self.assertEqual(type(f.hidden), str)
 
