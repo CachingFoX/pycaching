@@ -116,7 +116,7 @@ class Origin(UrlParameters):
 class Filter:
     def __init__(self, enabled=None, found=None, terrain=None, difficulty=None, personal_note=None,
                  corrected_coordinates=None, premium=None, favorite_points=None, owner=None, keyword=None,
-                 hidden=None):
+                 hidden=None, not_found=None):
         """
 
         :param enabled:
@@ -133,7 +133,8 @@ class Filter:
             'favorite_points': None,
             'owner': None,
             'keyword': None,
-            'hidden': None
+            'hidden': None,
+            'not_found': None
         }
 
         self.enabled = enabled
@@ -147,6 +148,7 @@ class Filter:
         self.owner = owner
         self.keyword = keyword
         self.hidden = hidden
+        self.not_found = not_found
 
     def __repr__(self):
         return "{}".format(self.parameters)
@@ -164,8 +166,12 @@ class Filter:
             'fav': str(self.favorite_points) if self.favorite_points is not None else None,
             'o': self.__helper_get_bool(self.owner),
             'kw': self.keyword if self.keyword is not None else None,
-            'owner[0]' : self.hidden if self.hidden is not None else None
+            'owner[0]': self.hidden if self.hidden is not None else None
         }
+        if self.not_found is not None:
+            for index, item in enumerate(self.not_found):
+                q['nfb[{0}]'.format(index)] = item
+
         # remove all items in the dict with the value None
         for key in list(q):
             if q[key] is None:
@@ -333,3 +339,16 @@ class Filter:
             value = str(value)
         self._parameters['hidden'] = value
 
+    @property
+    def not_found(self):
+        return self._parameters['not_found']
+
+    @not_found.setter
+    def not_found(self, value):
+        if value is None or (type(value) in (str, list, tuple) and len(value) == 0):
+            value = None
+
+        if value is not None and type(value) in (str, int, float):
+            value = [str(value)]
+
+        self._parameters['not_found'] = value
