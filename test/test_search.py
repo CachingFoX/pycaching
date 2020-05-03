@@ -86,16 +86,16 @@ class TestMethods(NetworkedTest):
                 self.assertTrue(is_sorted(favorites, ascend=False))
                 self.assertEqual(index + 1, 10)
                 self.assertDictEqual(data, {
-                    'GC13Y2Y': 11360,
-                    'GC11JM6': 8159,
+                    'GC13Y2Y': 11362,
+                    'GC11JM6': 8167,
                     'GC18182': 6811,
-                    'GC2586K': 6795,
-                    'GC167KK': 6362,
-                    'GC38DP9': 5501,
-                    'GC2J9J5': 5309,
-                    'GC35KGZ': 5288,
+                    'GC2586K': 6802,
+                    'GC167KK': 6365,
+                    'GC38DP9': 5505,
+                    'GC2J9J5': 5314,
+                    'GC35KGZ': 5293,
                     'GC40': 5120,
-                    'GCK25B': 4942
+                    'GCK25B': 4943
                 })
         pass
 
