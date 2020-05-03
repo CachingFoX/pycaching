@@ -264,8 +264,10 @@ class Geocaching(object):
         while True:
             # get one page
             geocaches_table, whole_page = self._search_get_page(parameters, start_index)
+            rows = geocaches_table.find_all("tr")
 
-            if len(geocaches_table.find_all("tr")) == 0:
+            # leave loop if there are no (more) results
+            if not rows:
                 return
 
             # prepare language-dependent mappings
@@ -278,7 +280,7 @@ class Geocaching(object):
                 }
 
             # parse caches in result
-            for start_index, row in enumerate(geocaches_table.find_all("tr"), start_index):
+            for start_index, row in enumerate(rows, start_index):
 
                 limit -= 1  # handle limit
                 if limit < 0:
